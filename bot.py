@@ -1,6 +1,6 @@
 import telebot
 import sqlite3
-
+#Modification from yuk0 
 bot=telebot.TeleBot('1001877138:AAHefrzspeT5CLisWsv9kdQfP-zQnjuWr6Q')
 
 keyboard1 = telebot.types.ReplyKeyboardMarkup(True)
@@ -59,25 +59,25 @@ def number(message):
         room_number = int(message.text)
         room_number = abs(room_number)
         msg = bot.send_message(message.chat.id, 'Тепер введи nicknames pls, якщо що - ось так, бо зі звичайною фігньою не вийде, тре нікнейм для нагадувань ось так: - {0}'.format('@' + message.chat.username))
-        
+
         # the next line is a musthave for a final product as it'll ease the room reg process
         #guys.append('@'+message.chat.username)
         bot.register_next_step_handler(msg, names)
     except:
-        msg = bot.send_message(message.chat.id, 'Ну, сам розумієш, що {0} людей вас бути не може - ботові треба ціле додатнє число'.format(message.text))       
+        msg = bot.send_message(message.chat.id, 'Ну, сам розумієш, що {0} людей вас бути не може - ботові треба ціле додатнє число'.format(message.text))
         bot.register_next_step_handler(msg, number)
 
 
 
 def names(message):
-    
+
     if (message.text).startswith('@'):
         guys.append(message.text)
         num = len(guys)
         num = len(guys)
         print(num)
         # print(guys)
-        if num != (int(lis[1])):    
+        if num != (int(lis[1])):
             print(num)
             print((int(lis[1])))
             msg = bot.send_message(message.chat.id, 'Окей, додав я туди {0} чувака - {1}.'.format(num, message.text), reply_markup=keyboard2)
@@ -95,7 +95,7 @@ def names(message):
             VALUES ( ?, ?)''', ( str(lis[0]), str(guys), ) )
             conn.commit()
     else:
-            msg = bot.send_message(message.chat.id, 'Ти повинен ввести нік чувака, що починається з "@" ', reply_markup=keyboard2)       
+            msg = bot.send_message(message.chat.id, 'Ти повинен ввести нік чувака, що починається з "@" ', reply_markup=keyboard2)
             bot.register_next_step_handler(msg, names)
 
 
@@ -126,12 +126,12 @@ def get_text_messages(message):
     try:
         # print(kimn)
         # print(l2)
-        l1 = kimn.strip('][').split(', ') 
+        l1 = kimn.strip('][').split(', ')
         print(type(l1))
         if not l2:
             l2 = []
         else:
-            l2 = l2.strip('][').split(', ') 
+            l2 = l2.strip('][').split(', ')
         print(l2)
 
         if message.text == "Чия черга?":
@@ -166,7 +166,7 @@ def get_text_messages(message):
 
 
 
-            bot.send_message(message.from_user.id, "Уважаю, тепер {0} повинен прибирати".format((l2[0].strip("'"))), reply_markup=keyboard2) 
+            bot.send_message(message.from_user.id, "Уважаю, тепер {0} повинен прибирати".format((l2[0].strip("'"))), reply_markup=keyboard2)
 
         else:
             # bot.send_message(message.from_user.id, "шо? ти лох")
@@ -176,8 +176,8 @@ def get_text_messages(message):
     except:
 
         bot.send_message(message.from_user.id, "Чувак, що я можу тобі сказати - тебе нема в кімнатах! ось так от, нажми /reg щоб зареєструвати нову!")
-    
-       
+
+
 
 
 bot.polling(none_stop=True, interval=0)
