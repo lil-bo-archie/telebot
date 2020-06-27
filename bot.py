@@ -91,21 +91,17 @@ def names(message):
             cur = conn.cursor()
 
             cur.execute('''SELECT members FROM Rooms ''')
-            cur.execute('''INSERT OR IGNORE INTO Rooms (name, members)
-            VALUES ( ?, ?)''', ( str(lis[0]), str(guys), ) )
+            cur.execute('''INSERT OR IGNORE INTO Rooms (name, members, l2)
+            VALUES ( ?, ?, ?)''', ( str(lis[0]), str(guys), 0) )
             conn.commit()
     else:
             msg = bot.send_message(message.chat.id, 'Ти повинен ввести нік чувака, що починається з "@" ', reply_markup=keyboard2)       
             bot.register_next_step_handler(msg, names)
 
 
-# l1 = ["@lil_bo_archie", "@not_the_king", "@pobo4nuy_efekt", "@notAProgrammer"]
-# print(l1)
-# l1 = guys
-
-# @bot.message_handler(commands=['go'])
 @bot.message_handler(content_types=['text'])
 def get_text_messages(message):
+    l2 = []
 
     conn = sqlite3.connect('bot_database.sqlite')
     cur = conn.cursor()
@@ -122,18 +118,17 @@ def get_text_messages(message):
             kimn = (n[n.index(room)][2])
             l2 = (n[n.index(room)][3])
             print('osio kimnata - ',kimn)
-    l2 = []
     try:
-        # print(kimn)
-        # print(l2)
-        l1 = kimn.strip('][').split(', ') 
-        print(type(l1))
-        if not l2:
-            l2 = []
-        else:
-            l2 = l2.strip('][').split(', ') 
-        print(l2)
 
+        l1 = kimn.strip('][').split(', ') 
+
+        print(type(l1))
+        # if not l2:
+        #     l2 = []
+        # else:
+        #     l2 = l2.strip('][').split(', ') 
+        print(l2)
+        l2 = []
         if message.text == "Чия черга?":
             if len(l2) <= 1:
                 l2.extend(l1)
