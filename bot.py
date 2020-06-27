@@ -101,7 +101,6 @@ def names(message):
 
 @bot.message_handler(content_types=['text'])
 def get_text_messages(message):
-    l2 = []
 
     conn = sqlite3.connect('bot_database.sqlite')
     cur = conn.cursor()
@@ -122,54 +121,51 @@ def get_text_messages(message):
 
         l1 = kimn.strip('][').split(', ') 
 
-        print(type(l1))
+        # print(type(l1))
         # if not l2:
         #     l2 = []
         # else:
         #     l2 = l2.strip('][').split(', ') 
-        print(l2)
-        l2 = []
+        # print('osio nash nomer index : ',l2)
+        # l2 = []
         if message.text == "Чия черга?":
-            if len(l2) <= 1:
-                l2.extend(l1)
+            if int(l2) >= len(l1):
+                l2 = 0
+            # print('stage 1')
             # print(l2[0], 'cleans')
-            print(message.chat.username,'opa i tut', l2[0].strip("'"))
-            if (l2[0]).strip("'") == ('@'+message.chat.username):
+            # print(message.chat.username,'opa i tut', l2[0].strip("'"))
+            if (l1[int(l2)]).strip("'") == ('@'+message.chat.username):
                 bot.send_message(message.from_user.id, "Ти повинен прибрати!",  reply_markup=keyboard3)
             else:
-                bot.send_message(message.from_user.id, "{0} повинен прибрати".format((l2[0]).strip("'")))
+                bot.send_message(message.from_user.id, "{0} повинен прибрати".format((l1[int(l2)]).strip("'")))
         elif message.text == "Треба прибрати(((":
-            if len(l2) <= 1:
-                l2.extend(l1)
-            bot.send_message(message.from_user.id, "Запускаю нагадування {0}".format((l2[0]).strip("'")))
+            print('stage 2')
+            # if len(l2) <= 1:
+            #     l2.extend(l1)
+            bot.send_message(message.from_user.id, "Запускаю нагадування {0}".format((l1[int(l2)]).strip("'")))
 
         elif message.text == "виніс":
-            print('1 tut nema pomylky')
-            if len(l2) <= 1:
-                # print('2/1 tut nema pomylky')
-                l2.extend(l1)
-                # conn = sqlite3.connect('bot_database.sqlite')
-                # cur = conn.cursor()
-                # cur.execute('''SELECT members FROM Rooms ''')
-                # # print( str(l2), str(l1))
-                # cur.execute('''INSERT INTO Rooms (l2) VALUES (?) WHERE members = (?)''', ( str(l2), str(l1), ) )
-                # conn.commit()
-                # print(' 2 tut nema pomylky')
+            l2 = int(l2)+1
+            print(len(l1))
+            if l2 == len(l1):
+                l2 = 0
+            print('our index is : ',l2)
+            bot.send_message(message.from_user.id, "Уважаю, тепер {0} повинен прибирати".format((l1[l2].strip("'"))), reply_markup=keyboard2) 
 
-            del(l2[0])
-            print(l2[0], 'cleans')
+            conn = sqlite3.connect('bot_database.sqlite')
+            cur = conn.cursor()
+            print( str(l2))
+            print('osyo l1 - ' ,l1)
+            cur.execute('''UPDATE Rooms SET l2 = (?) WHERE members = (?) ''', ( l2, kimn, ) )
+            print('nash l2 tut - ', l2)
+            conn.commit()
+        
 
-
-
-            bot.send_message(message.from_user.id, "Уважаю, тепер {0} повинен прибирати".format((l2[0].strip("'"))), reply_markup=keyboard2) 
 
         else:
-            # bot.send_message(message.from_user.id, "шо? ти лох")
-            myname = '@' + message.chat.username
-            print('My name is ', myname)
-            bot.send_message(message.from_user.id, "шо? тебе звати хаха {0}".format(myname))
-    except:
 
+            bot.send_message(message.from_user.id, "шо? жми на хелп ")
+    except:
         bot.send_message(message.from_user.id, "Чувак, що я можу тобі сказати - тебе нема в кімнатах! ось так от, нажми /reg щоб зареєструвати нову!")
     
        
